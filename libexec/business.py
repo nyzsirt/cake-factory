@@ -15,6 +15,8 @@ product_parser.add_argument('--quantity', dest='quantity', action='store', requi
 
 stock_parser = subparsers.add_parser('stock', help='Cancel Kasirga Job')
 stock_parser.add_argument('--goods', dest='goods', action='store', required=True, help='JSON type parameters')
+stock_parser.add_argument('--action', dest='action', action='store', required=False, default="increase",
+                          help='string increase/decrease')
 
 
 def order(arguments):
@@ -28,6 +30,7 @@ def order(arguments):
 
 def stock(arguments):
     goods = json.loads(arguments.goods)
+    goods.update({"action": arguments.action})
     all_ids = job.queue_jobs("tasks.stock.Stock", goods, queue="low")
     return all_ids
 
